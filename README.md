@@ -1,2 +1,2 @@
-# personal-python-project-template
-Personal template for python project with source directory
+# prodius
+Calculates cartesian product from iterables without memory error.
