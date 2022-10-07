@@ -49,7 +49,7 @@ import prodius
 
 # prodius.product() is used to calculate cartesian product.
 # No exception or MemoryError expected even if iterables are large.
-iterables = [lambda: range(10**25), lambda: range(10**25)]
+iterables = [lambda: range(10**15), lambda: range(10**15)]
 product = prodius.product(*iterables) # works as espected
 ```
 ```python
@@ -57,7 +57,7 @@ import itertools
 
 # itertools.product() is used to calculate cartesian product.
 # MemoryError expected as iterables are too large.
-iterables = [range(10**25), range(10**25)]
+iterables = [range(10**15), range(10**15)]
 product = itertools.product(*iterables) # MemoryError
 ```
 
