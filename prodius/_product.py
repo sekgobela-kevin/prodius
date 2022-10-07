@@ -8,6 +8,11 @@ Languages: Python 3
 '''
 from prodius import exceptions
 
+try:
+    from collections.abc import Iterable
+except AttributeError:
+    from collections import Iterable
+
 
 class Product():
     def __init__(self, *iterables, repeat=1) -> None:
@@ -20,12 +25,19 @@ class Product():
         return [iter(callable_()) for callable_ in callables]
 
     @classmethod
-    def to_callable(cls, iterable):
+    def to_callable(cls, iterable, index=None):
         # Creates callable_ from iterable if not already callable_.
         if callable(iterable):
             return iterable
         else:
+            if index!=0 and isinstance(iterable, Iterable):
+                iterable = tuple(iterable)
             return lambda: iterable
+
+    @classmethod
+    def to_callables(cls, iterables):
+        length = len(iterables)
+        return [cls.to_callable(iterables[i], i) for i in range(length)]
 
     @classmethod
     def split_iterator(cls, iterator, split_size):
@@ -260,7 +272,7 @@ class Product():
     def product(cls, *iterables, repeat=1):
         # Returns product of iterators similar to `itertools.product()`.
         # But iterables can contain callable_ objects like functions.
-        iterables = list(map(cls.to_callable, iterables))
+        iterables = cls.to_callables(iterables)
         return cls.product_callables(iterables, repeat=repeat)
 
     def __iter__(self):
@@ -278,7 +290,7 @@ def product(*iterables, repeat=1):
     'RecursionError'. That causes number of iterables or repeat argument to
     be restricted to 12. Going beyond 12 would cause recursion error, this 
     is currently a bug to be fixed.'''
-    return Product(*iterables, repeat=repeat)
+    return iter(Product(*iterables, repeat=repeat))
 
 
 if __name__ == "__main__":
